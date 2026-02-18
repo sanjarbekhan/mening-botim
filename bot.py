@@ -89,7 +89,7 @@ async def process_age(message: types.Message, state: FSMContext):
         await message.answer(text, reply_markup=check_kb)
         await state.set_state(Form.check_sub)
 # --- O'ZGARTIRILGAN QISM: OBUNA TEKSHIRISH ---
-@dp.message(Form.check_sub, F.text == "✅ Obunani tekshirish")
+@dp.message(Form.check_sub, F.text=="✅ Obunani tekshirish")
 async def check_subscription(message: types.Message, state: FSMContext):
 not_subscribed = [] # Obuna bo'lmagan kanallar ro'yxati
     for ch in CHANNELS:
