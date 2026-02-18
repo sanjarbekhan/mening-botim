@@ -116,10 +116,10 @@ async def check_subscription(message: types.Message, state: FSMContext):
         text = "❌ <b>Siz hali kanallarga obuna bo'lmadingiz!</b>\n\nIltimos, quyidagilarga obuna bo'lib, qayta tekshiring:\n"
         for ch in not_subscribed:
             text += f"👉 {ch}\n"
-        
+
         await message.answer(text, parse_mode="HTML", reply_markup=check_kb)
-        @dp.message(F.text == "🚀 Testni boshlash")
-async def start_quiz(message: types.Message, state: FSMContext):
+@dp.message(        F.text == "🚀 Testni boshlash")
+        async def start_quiz(message: types.Message, state: FSMContext):
     # Qo'shimcha xavfsizlik: Test boshlashdan oldin ham yana bir bor tekshirish
     # (Agar xohlasangiz bu qismni olib tashlashingiz mumkin, lekin tavsiya etiladi)
     for ch in CHANNELS:
@@ -190,5 +190,5 @@ async def main():
     logging.basicConfig(level=logging.INFO)
     await dp.start_polling(bot)
 
-if name == "main":
+if __name__ == "__main__":
     asyncio.run(main())
