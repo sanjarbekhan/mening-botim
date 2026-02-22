@@ -40,7 +40,8 @@ class Form(StatesGroup):
     age = State()
     check_sub = State()
     quiz = State()
-    bot = Bot(token=API_TOKEN)
+
+bot = Bot(token=API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 finished_users = set() # Bir marta ishlaganlarni saqlash
 
@@ -52,6 +53,7 @@ def get_quiz_kb(options):
 start_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Tanlovda ishtirok etish")]], resize_keyboard=True)
 check_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="✅ Obunani tekshirish")]], resize_keyboard=True)
 go_quiz_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="🚀 Testni boshlash")]], resize_keyboard=True)
+
 # --- HANDLERS ---
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
@@ -59,20 +61,24 @@ async def cmd_start(message: types.Message):
         await message.answer("Siz testni topshirib bo'lgansiz, qayta topshirish mumkin emas.")
         return
     await message.answer(f"Salom {message.from_user.first_name}, tanlovga xush kelibsiz! Tanlovda ishtirok etmoqchimisiz?", reply_markup=start_kb)
+
 @dp.message(F.text == "Tanlovda ishtirok etish")
 async def process_start_contest(message: types.Message, state: FSMContext):
     await message.answer("Ismingizni kiriting:", reply_markup=ReplyKeyboardRemove())
     await state.set_state(Form.name)
+
 @dp.message(Form.name)
 async def process_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
     await message.answer("Familiyangizni kiriting:")
     await state.set_state(Form.surname)
+
 @dp.message(Form.surname)
 async def process_surname(message: types.Message, state: FSMContext):
     await state.update_data(surname=message.text)
     await message.answer("Yoshingizni kiriting:")
     await state.set_state(Form.age)
+
 @dp.message(Form.age)
 async def process_age(message: types.Message, state: FSMContext):
     if not message.text.isdigit():
@@ -84,14 +90,17 @@ async def process_age(message: types.Message, state: FSMContext):
         await message.answer("Tanlov 18 yoshgacha bolalar uchun mo'ljallangan.")
         await state.clear()
     else:
+        await state.update_data(age=age)
         text = "Tanlovda ishtirok etish uchun quyidagi kanallarga obuna bo'ling:\n"
-        for ch in CHANNELS: text += f"{ch}\n"
+        for ch in CHANNELS: 
+            text += f"{ch}\n"
         await message.answer(text, reply_markup=check_kb)
         await state.set_state(Form.check_sub)
+
 # --- O'ZGARTIRILGAN QISM: OBUNA TEKSHIRISH ---
 @dp.message(Form.check_sub, F.text=="✅ Obunani tekshirish")
 async def check_subscription(message: types.Message, state: FSMContext):
-not_subscribed = [] # Obuna bo'lmagan kanallar ro'yxati
+    not_subscribed = [] # Obuna bo'lmagan kanallar ro'yxati
     for ch in CHANNELS:
         try:
             member = await bot.get_chat_member(ch, message.from_user.id)
@@ -106,14 +115,13 @@ not_subscribed = [] # Obuna bo'lmagan kanallar ro'yxati
         await message.answer("Obuna tasdiqlandi! Testni boshlashga tayyormisiz?", reply_markup=go_quiz_kb)
     else:
         # Obuna bo'lmagan kanallarni qayta chiqarib beramiz
-text = "❌ <b>Siz hali kanallarga obuna bo'lmadingiz!</b>\n\nIltimos, quyidagilarga obuna bo'lib, qayta tekshiring:\n"
-for ch in not_subscribed:
-text += f"👉 {ch}\n"
-await message.answer(text, parse_mode="HTML", reply_markup=check_kb)
+        text = "❌ <b>Siz hali kanallarga obuna bo'lmadingiz!</b>\n\nIltimos, quyidagilarga obuna bo'lib, qayta tekshiring:\n"
+        for ch in not_subscribed:
+            text += f"👉 {ch}\n"
+        await message.answer(text, parse_mode="HTML", reply_markup=check_kb)
+
 @dp.message(F.text == "🚀 Testni boshlash")
 async def start_quiz(message: types.Message, state: FSMContext):
-    # Qo'shimcha xavfsizlik: Test boshlashdan oldin ham yana bir bor tekshirish
-    # (Agar xohlasangiz bu qismni olib tashlashingiz mumkin, lekin tavsiya etiladi)
     for ch in CHANNELS:
         try:
             member = await bot.get_chat_member(ch, message.from_user.id)
@@ -128,7 +136,7 @@ async def start_quiz(message: types.Message, state: FSMContext):
 
 async def send_question(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    q_idx = data['current_q']
+    q_idx = data.get('current_q', 0)
     
     if q_idx >= len(QUIZ_DATA):
         await finish_quiz(message, state)
@@ -147,17 +155,22 @@ async def send_question(message: types.Message, state: FSMContext):
     new_data = await state.get_data()
     
     # Agar foydalanuvchi hali ham shu savolda turgan bo'lsa (javob bermagan bo'lsa)
-    if current_state == Form.quiz and new_data.get('current_q') == q_idx:
+    if current_state == Form.quiz.state and new_data.get('current_q') == q_idx:
         await message.answer("⏰ Vaqt tugadi! Keyingi savolga o'tamiz.")
         await state.update_data(current_q=q_idx + 1)
         await send_question(message, state)
+
 @dp.message(Form.quiz)
 async def handle_answer(message: types.Message, state: FSMContext):
     data = await state.get_data()
-    q_idx = data['current_q']
-    question = QUIZ_DATA[q_idx]
+    q_idx = data.get('current_q', 0)
     
+    if q_idx >= len(QUIZ_DATA):
+        return
+
+    question = QUIZ_DATA[q_idx]
     score = data.get('score', 0)
+    
     if message.text == question['a']:
         score += 1
         await message.answer("✅ To'g'ri!")
@@ -170,15 +183,26 @@ async def handle_answer(message: types.Message, state: FSMContext):
 async def finish_quiz(message: types.Message, state: FSMContext):
     data = await state.get_data()
     finished_users.add(message.from_user.id)
-    await message.answer(f"Tabriklaymiz {data['name']}! Test tugadi.\nNatijangiz: {data['score']}/{len(QUIZ_DATA)}", reply_markup=ReplyKeyboardRemove())
+    
+    name = data.get('name', 'Ishtirokchi')
+    surname = data.get('surname', '')
+    age = data.get('age', 'Noma\'lum')
+    score = data.get('score', 0)
+
+    await message.answer(f"Tabriklaymiz {name}! Test tugadi.\nNatijangiz: {score}/{len(QUIZ_DATA)}", reply_markup=ReplyKeyboardRemove())
     
     # Adminga hisobot yuborish
-    report = f"Yangi natija:\nIsm: {data['name']}\nFamiliya: {data['surname']}\nYosh: {data['age']}\nNatija: {data['score']}"
-    await bot.send_message(ADMIN_ID, report)
+    report = f"Yangi natija:\nIsm: {name}\nFamiliya: {surname}\nYosh: {age}\nNatija: {score}/{len(QUIZ_DATA)}"
+    try:
+        await bot.send_message(ADMIN_ID, report)
+    except Exception as e:
+        logging.error(f"Adminga xabar yuborishda xatolik: {e}")
+        
     await state.clear()
 
 async def main():
     logging.basicConfig(level=logging.INFO)
+    await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
