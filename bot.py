@@ -2,17 +2,19 @@ import asyncio
 import logging
 from datetime import datetime
 from aiogram import Bot, Dispatcher, F, types
-from aiogram.filters import CommandStart, StateFilter
+from aiogram.filters import CommandStart, Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from aiogram.enums import ChatMemberStatus
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 
 # --- SOZLAMALAR ---
 API_TOKEN = "8409047534:AAG0CBuYEeYMt7_cmXlDyeVEZ5L09LcVt3s"
-CHANNELS = ["@bolalartashkilotiuz", "@xasanboy_nabiyev"] # @ belgisi bilan yozing
-ADMIN_ID = 6755433894 # O'zingizning ID raqamingiz
+CHANNELS = ["@bolalartashkilotiuz", "@xasanboy_nabiyev"]
+ADMIN_ID = 6755433894
 
 # --- TEST SAVOLLARI ---
 QUIZ_DATA = [
@@ -30,19 +32,20 @@ QUIZ_DATA = [
     {"q": "12. Tashkilot aʼzolari nimani amalga oshiradilar?", "o": ["A) Faqat loyihalar", "B) Loyihalar, aksiyalar, treninglarda ishtirok etadilar", "C) Kitob nashr qilish"], "a": "B) Loyihalar, aksiyalar, treninglarda ishtirok etadilar"},
     {"q": "13. Tashkilot qaysi shaklda tashkil etilgan?", "o": ["A) Davlat organi", "B) Nodavlat, notijorat tashkilot", "C) Xususiy korxona", "D) Xalqaro"], "a": "B) Nodavlat, notijorat tashkilot"},
     {"q": "14. Plogging aksiya maqsadi nima?", "o": ["A) Pul yig‘ish", "B) Atrof-muhitni tozalash va sog'lom turmush", "C) Reyting", "D) Sport"], "a": "B) Atrof-muhitni tozalash va sog'lom turmush"},
-    {"q": "15. Butunjahon bolalar kuni qachon?", "o": ["A) 1-iyun", "B) 20-noyabr", "C) 11-oktabr", "D) 1-sentabr"], "a": "B) 20-noyabr"},
-]
-
-# --- FSM HOLATLARI ---
+    {"q": "15. Butunjahon bolalar kuni qachon?", "o": ["A) 20-noyabr", "B) 1-iyun", "C) 11-oktabr", "D) 1-sentabr"], "a": "A) 20-noyabr"},
+] # --- FSM HOLATLARI ---
 class Form(StatesGroup):
     name = State()
     surname = State()
     age = State()
     check_sub = State()
     quiz = State()
-    bot = Bot(token=API_TOKEN)
+
+bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher(storage=MemoryStorage())
+
 finished_users = set() # Bir marta ishlaganlarni saqlash
+all_results = [] # Barcha natijalarni vaqt bilan saqlab borish uchun
 
 # --- KEYBOARDS ---
 def get_quiz_kb(options):
@@ -94,31 +97,28 @@ async def process_age(message: types.Message, state: FSMContext):
         for ch in CHANNELS: 
             text += f"{ch}\n"
         await message.answer(text, reply_markup=check_kb)
-        await state.set_state(Form.check_sub)
-
-# --- O'ZGARTIRILGAN QISM: OBUNA TEKSHIRISH ---
+        await state.set_state(Form.check_sub) 
 @dp.message(Form.check_sub, F.text=="✅ Obunani tekshirish")
 async def check_subscription(message: types.Message, state: FSMContext):
-    not_subscribed = [] # Obuna bo'lmagan kanallar ro'yxati
+    not_subscribed = []
     for ch in CHANNELS:
         try:
             member = await bot.get_chat_member(ch, message.from_user.id)
             if member.status not in [ChatMemberStatus.MEMBER, ChatMemberStatus.ADMINISTRATOR, ChatMemberStatus.CREATOR]:
                 not_subscribed.append(ch)
         except Exception as e:
-            # Agar bot kanal admini bo'lmasa yoki kanal topilmasa, xatolik bermaslik uchun
             logging.error(f"Xatolik: {ch} - {e}")
             not_subscribed.append(ch)
 
-    if not not_subscribed: # Agar ro'yxat bo'sh bo'lsa (demak hamma kanalga a'zo)
+    if not not_subscribed:
         await message.answer("Obuna tasdiqlandi! Testni boshlashga tayyormisiz?", reply_markup=go_quiz_kb)
     else:
-        # Obuna bo'lmagan kanallarni qayta chiqarib beramiz
         text = "❌ <b>Siz hali kanallarga obuna bo'lmadingiz!</b>\n\nIltimos, quyidagilarga obuna bo'lib, qayta tekshiring:\n"
         for ch in not_subscribed:
             text += f"👉 {ch}\n"
-        await message.answer(text, parse_mode="HTML", reply_markup=check_kb)
-        @dp.message(F.text == "🚀 Testni boshlash")
+        await message.answer(text, reply_markup=check_kb)
+
+@dp.message(F.text == "🚀 Testni boshlash")
 async def start_quiz(message: types.Message, state: FSMContext):
     for ch in CHANNELS:
         try:
@@ -129,7 +129,7 @@ async def start_quiz(message: types.Message, state: FSMContext):
         except:
             pass
 
-    await state.update_data(score=0, current_q=0)
+    await state.update_data(score=0, current_q=0, start_time=datetime.now().timestamp())
     await send_question(message, state)
 
 async def send_question(message: types.Message, state: FSMContext):
@@ -145,19 +145,15 @@ async def send_question(message: types.Message, state: FSMContext):
     await state.update_data(last_msg_id=msg.message_id)
     await state.set_state(Form.quiz)
     
-    # 20 soniya taymer
     await asyncio.sleep(20)
     
-    # Taymerdan keyin holatni tekshirish
     current_state = await state.get_state()
     new_data = await state.get_data()
     
-    # Agar foydalanuvchi hali ham shu savolda turgan bo'lsa (javob bermagan bo'lsa)
     if current_state == Form.quiz.state and new_data.get('current_q') == q_idx:
         await message.answer("⏰ Vaqt tugadi! Keyingi savolga o'tamiz.")
         await state.update_data(current_q=q_idx + 1)
-        await send_question(message, state)
-
+        await send_question(message, state) 
 @dp.message(Form.quiz)
 async def handle_answer(message: types.Message, state: FSMContext):
     data = await state.get_data()
@@ -186,11 +182,22 @@ async def finish_quiz(message: types.Message, state: FSMContext):
     surname = data.get('surname', '')
     age = data.get('age', 'Noma\'lum')
     score = data.get('score', 0)
-
-    await message.answer(f"Tabriklaymiz {name}! Test tugadi.\nNatijangiz: {score}/{len(QUIZ_DATA)}", reply_markup=ReplyKeyboardRemove())
     
-    # Adminga hisobot yuborish
-    report = f"Yangi natija:\nIsm: {name}\nFamiliya: {surname}\nYosh: {age}\nNatija: {score}/{len(QUIZ_DATA)}"
+    start_time = data.get('start_time', datetime.now().timestamp())
+    end_time = datetime.now().timestamp()
+    time_taken = end_time - start_time
+    
+    all_results.append({
+        'name': name,
+        'surname': surname,
+        'age': age,
+        'score': score,
+        'time_taken': time_taken
+    })
+
+    await message.answer(f"Tabriklaymiz {name}! Test tugadi.\nNatijangiz: {score}/{len(QUIZ_DATA)}\nSarflangan vaqt: {time_taken:.1f} soniya", reply_markup=ReplyKeyboardRemove())
+    
+    report = f"🔔 <b>Yangi natija:</b>\n👤 Ism: {name} {surname}\n📅 Yosh: {age}\n📊 Natija: {score}/{len(QUIZ_DATA)}\n⏱ Vaqt: {time_taken:.1f} sekund"
     try:
         await bot.send_message(ADMIN_ID, report)
     except Exception as e:
@@ -198,9 +205,27 @@ async def finish_quiz(message: types.Message, state: FSMContext):
         
     await state.clear()
 
+@dp.message(Command("natijalar"))
+async def get_all_results(message: types.Message):
+    if message.from_user.id != ADMIN_ID:
+        return 
+        
+    if not all_results:
+        await message.answer("Hozircha hech kim testni ishlamadi.")
+        return
+        
+    sorted_results = sorted(all_results, key=lambda x: (-x['score'], x['time_taken']))
+    
+    text = "🏆 <b>UMUMIY REYTING:</b>\n\n"
+    for i, res in enumerate(sorted_results, 1):
+        text += f"<b>{i}-o'rin:</b> {res['name']} {res['surname']} | {res['score']} ball | ⏱ {res['time_taken']:.1f} sek\n"
+        
+    await message.answer(text[:4000])
+
 async def main():
     logging.basicConfig(level=logging.INFO)
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
+
 if __name__ == "__main__":
     asyncio.run(main())
