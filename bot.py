@@ -12,7 +12,7 @@ from aiogram.enums import ChatMemberStatus
 # --- SOZLAMALAR ---
 API_TOKEN = "8409047534:AAG0CBuYEeYMt7_cmXlDyeVEZ5L09LcVt3s"
 CHANNELS = ["@bolalartashkilotiuz", "@xasanboy_nabiyev"] # @ belgisi bilan yozing
-ADMIN_ID = 6755433894 # O'zingizning ID raqamingiz
+ADMIN_ID = 976019444 # O'zingizning ID raqamingiz
 
 # --- TEST SAVOLLARI ---
 QUIZ_DATA = [
