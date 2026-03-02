@@ -30,7 +30,7 @@ QUIZ_DATA = [
     {"q": "12. Tashkilot aʼzolari nimani amalga oshiradilar?", "o": ["A) Faqat loyihalar", "B) Loyihalar, aksiyalar, treninglarda ishtirok etadilar", "C) Kitob nashr qilish"], "a": "B) Loyihalar, aksiyalar, treninglarda ishtirok etadilar"},
     {"q": "13. Tashkilot qaysi shaklda tashkil etilgan?", "o": ["A) Davlat organi", "B) Nodavlat, notijorat tashkilot", "C) Xususiy korxona", "D) Xalqaro"], "a": "B) Nodavlat, notijorat tashkilot"},
     {"q": "14. Plogging aksiya maqsadi nima?", "o": ["A) Pul yig‘ish", "B) Atrof-muhitni tozalash va sog'lom turmush", "C) Reyting", "D) Sport"], "a": "B) Atrof-muhitni tozalash va sog'lom turmush"},
-    {"q": "15. Butunjahon bolalar kuni qachon?", "o": ["A) 20-noyabr", "B) 1-iyun", "C) 11-oktabr", "D) 1-sentabr"], "a": "A) 20-noyabr"},
+    {"q": "15. Butunjahon bolalar kuni qachon?", "o": ["A) 1-iyun", "B) 20-noyabr", "C) 11-oktabr", "D) 1-sentabr"], "a": "B) 20-noyabr"},
 ]
 
 # --- FSM HOLATLARI ---
@@ -40,7 +40,7 @@ class Form(StatesGroup):
     age = State()
     check_sub = State()
     quiz = State()
-bot = Bot(token=API_TOKEN)
+    bot = Bot(token=API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 finished_users = set() # Bir marta ishlaganlarni saqlash
 
@@ -118,7 +118,7 @@ async def check_subscription(message: types.Message, state: FSMContext):
         for ch in not_subscribed:
             text += f"👉 {ch}\n"
         await message.answer(text, parse_mode="HTML", reply_markup=check_kb)
-@dp.message(F.text == "🚀 Testni boshlash")
+        @dp.message(F.text == "🚀 Testni boshlash")
 async def start_quiz(message: types.Message, state: FSMContext):
     for ch in CHANNELS:
         try:
