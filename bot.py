@@ -1,3 +1,4 @@
+Sanjar Xasanov, [02/03/2026 14:14]
 import asyncio
 import logging
 from datetime import datetime
@@ -41,6 +42,7 @@ class Form(StatesGroup):
     check_sub = State()
     quiz = State()
 
+Sanjar Xasanov, [02/03/2026 14:14]
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 finished_users = set() # Bir marta ishlaganlarni saqlash
@@ -120,6 +122,7 @@ async def check_subscription(message: types.Message, state: FSMContext):
             text += f"👉 {ch}\n"
         await message.answer(text, parse_mode="HTML", reply_markup=check_kb)
 
+Sanjar Xasanov, [02/03/2026 14:14]
 @dp.message(F.text == "🚀 Testni boshlash")
 async def start_quiz(message: types.Message, state: FSMContext):
     for ch in CHANNELS:
@@ -205,5 +208,5 @@ async def main():
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
-if __name__ == "__main__":
+if name == "main":
     asyncio.run(main())
