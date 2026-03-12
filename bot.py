@@ -19,7 +19,7 @@ API_TOKEN = "8409047534:AAH0h-FogMveHfKuqwkNLyW_4JXk8jp3c54"
 ADMIN_ID = 6755433894
 
 # Faqat bot tekshira oladigan Telegram kanallari
-CHANNELS = ["@bolalartashkilotiuz"] 
+CHANNELS = ["@uzyoshlaryetakchilarii"] 
 
 # ==========================================
 # TEST SAVOLLARI
