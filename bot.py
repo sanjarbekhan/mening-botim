@@ -15,7 +15,7 @@ from aiogram.client.default import DefaultBotProperties
 # ==========================================
 # SOZLAMALAR
 # ==========================================
-API_TOKEN = "8409047534:AAH3GqfUatbkaXbgECl6twuIT7TWMRzX1Os"
+API_TOKEN = "8409047534:AAGWUpQOIEKeUXED9eRYZGOA454ZYlkXJZg"
 ADMIN_ID = 6755433894
 
 # Faqat bot tekshira oladigan Telegram kanallari
