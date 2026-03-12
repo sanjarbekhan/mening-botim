@@ -207,7 +207,7 @@ async def finish_quiz_logic(message: types.Message, state: FSMContext):
     
     await message.answer(f"Tabriklaymiz! Test tugadi.\nSiz {len(QUIZ_DATA)} tadan {score} ta to'g'ri javob berdingiz.", reply_markup=ReplyKeyboardRemove())
     
-   report = (f"🔔 YANGI NATIJA:\n👤 {data['name']} {data['surname']}\n"
+report = (f"🔔 YANGI NATIJA:\n👤 {data['name']} {data['surname']}\n"
               f"📍 Viloyat: {data.get('region', 'Nomalum')}\n"
               f"📞 {data['phone']}\n📅 Yosh: {data['age']}\n"
               f"📊 Ball: {score}/15\n⏱ Vaqt: {time_taken:.1f}s")
