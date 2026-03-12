@@ -2,7 +2,7 @@ import asyncio
 import logging
 from datetime import datetime
 from aiogram import Bot, Dispatcher, F, types
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -14,24 +14,10 @@ from aiogram.client.default import DefaultBotProperties
 # SOZLAMALAR
 # ==========================================
 API_TOKEN = "8409047534:AAH0h-FogMveHfKuqwkNLyW_4JXk8jp3c54"
-@dp.message(Form.phone, F.contact)
-async def process_phone(message: types.Message, state: FSMContext):
-    await state.update_data(phone=message.contact.phone_number)
-    check_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="✅ Obunani tekshirish")]], resize_keyboard=True)
-    
-    # Barcha ijtimoiy tarmoqlar havolalari
-    text = (
-        "<b>Ishtirok etish uchun quyidagi sahifalarimizga obuna bo'ling:</b>\n\n"
-        "1. YouTube: https://www.youtube.com/@bolalartashkiloti\n"
-        "2. Facebook: [https://www.facebook.com/kamalakbt.uz]\n"
-        "3. Instagram: [https://www.instagram.com/bolalartashkiloti?igsh=b3l0bGJheHA4NGJo]\n"
-        "4. Telegram: https://t.me/bolalartashkilotiuz\n\n"
-        "<i>Eslatma:Iltimos barcha kanallarga obuna bo'ling!</i>"
-    )
-    
-    await message.answer(text, reply_markup=check_kb, disable_web_page_preview=True)
-    await state.set_state(Form.check_sub)
 ADMIN_ID = 6755433894
+
+# Faqat bot tekshira oladigan Telegram kanallari
+CHANNELS = ["@bolalartashkilotiuz"] 
 
 # ==========================================
 # TEST SAVOLLARI
@@ -54,9 +40,6 @@ QUIZ_DATA = [
     {"q": "15. O‘zbekiston Bolalar Tashkilotida nechta yo‘nalish bor?", "o": ["A) 7", "B) 9", "C) 6", "D) 10"], "a": "B) 9"},
 ]
 
-# ==========================================
-# FSM (HOLATLAR)
-# ==========================================
 class Form(StatesGroup):
     name = State()
     surname = State()
@@ -72,13 +55,14 @@ finished_users = set()
 # ==========================================
 # HANDLERLAR
 # ==========================================
+
 @dp.message(CommandStart())
 async def cmd_start(message: types.Message):
     if message.from_user.id in finished_users:
         await message.answer("Siz testni topshirib bo'lgansiz.")
         return
     kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="Tanlovda ishtirok etish")]], resize_keyboard=True)
-    await message.answer(f"Salom {message.from_user.first_name}!", reply_markup=kb)
+    await message.answer(f"Salom {message.from_user.first_name}! O'zbekiston Bolalar Tashkiloti tanlov botiga xush kelibsiz.", reply_markup=kb)
 
 @dp.message(F.text == "Tanlovda ishtirok etish")
 async def process_start(message: types.Message, state: FSMContext):
@@ -111,8 +95,16 @@ async def process_age(message: types.Message, state: FSMContext):
 async def process_phone(message: types.Message, state: FSMContext):
     await state.update_data(phone=message.contact.phone_number)
     check_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="✅ Obunani tekshirish")]], resize_keyboard=True)
-    text = "Ishtirok etish uchun quyidagi kanallarga obuna bo'ling:\n\n" + "\n".join(CHANNELS)
-    await message.answer(text, reply_markup=check_kb)
+    
+    text = (
+        "<b>Ishtirok etish uchun quyidagi sahifalarimizga obuna bo'ling:</b>\n\n"
+        "1. YouTube: https://www.youtube.com/@bolalartashkiloti\n"
+        "2. Facebook: https://www.facebook.com/kamalakbt.uz\n"
+        "3. Instagram: https://www.instagram.com/bolalartashkiloti\n"
+        "4. Telegram: https://t.me/bolalartashkilotiuz\n\n"
+        "<i>Eslatma: Iltimos, barcha kanallarga obuna bo'ling va pastdagi tugmani bosing!</i>"
+    )
+    await message.answer(text, reply_markup=check_kb, disable_web_page_preview=True)
     await state.set_state(Form.check_sub)
 
 @dp.message(Form.check_sub, F.text=="✅ Obunani tekshirish")
@@ -132,7 +124,7 @@ async def check_sub_logic(message: types.Message, state: FSMContext):
         go_quiz_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="🚀 Testni boshlash")]], resize_keyboard=True)
         await message.answer("Raxmat! Obuna tasdiqlandi. Testni boshlashingiz mumkin.", reply_markup=go_quiz_kb)
     else:
-        text = "Siz hali hamma kanallarga obuna bo'lmadingiz. Iltimos obuna bo'lib qaytadan tekshiring:\n\n" + "\n".join(not_subbed)
+        text = "Siz hali Telegram kanalimizga obuna bo'lmadingiz:\n" + "\n".join(not_subbed)
         await message.answer(text)
 
 @dp.message(F.text == "🚀 Testni boshlash")
@@ -160,6 +152,12 @@ async def handle_quiz_answer(message: types.Message, state: FSMContext):
     q_idx = data.get('current_q', 0)
     score = data.get('score', 0)
     
+    # Faqat QUIZ_DATA dagi variantlardan birini tanlaganini tekshirish
+    valid_answers = QUIZ_DATA[q_idx]['o']
+    if message.text not in valid_answers:
+        await message.answer("Iltimos, tugmalardan birini tanlang!")
+        return
+
     if message.text == QUIZ_DATA[q_idx]['a']:
         score += 1
         
