@@ -13,33 +13,42 @@ from aiogram.enums import ParseMode
 
 # --- SOZLAMALAR ---
 API_TOKEN = "8409047534:AAG0CBuYEeYMt7_cmXlDyeVEZ5L09LcVt3s"
-CHANNELS = ["@bolalartashkilotiuz", "@xasanboy_nabiyev"]
+CHANNELS = ["https://www.youtube.com/@Uzyoshlaryetakchilari", "https://www.instagram.com/uzyoshlaryetakchilari/", "https://www.facebook.com/profile.php?id=100083056130781", "@uzyoshlaryetakchilarii"]
 ADMIN_ID = 6755433894
 
 # --- TEST SAVOLLARI ---
+# --- YANGILANGAN TEST SAVOLLARI (SIZNING KALITINGIZ BO'YICHA) ---
 QUIZ_DATA = [
-    {"q": "1. Oʻzbekiston Bolalar Tashkiloti qachon tashkil etilgan?", "o": ["A) 2024-yil 16-aprel", "B) 2023-yil 1-mart", "C) 2025-yil 10-yanvar", "D) 2022-yil 5-may"], "a": "A) 2024-yil 16-aprel"},
-    {"q": "2. Bolalar tashkilotiga aʼzo boʻlish yoshi nechi yoshdan boshlanadi?", "o": ["A) 8 yoshdan", "B) 10 yoshdan", "C) 12 yoshdan", "D) 14 yoshdan"], "a": "B) 10 yoshdan"},
-    {"q": "3. Bosh sardorning vazifasi nimadan iborat?", "o": ["A) Moliyaviy hisobotlar", "B) Faoliyatni yakunlash", "C) Sardorlar faoliyatini muvofiqlashtirish", "D) Xalqaro aloqalar"], "a": "C) Sardorlar faoliyatini muvofiqlashtirish"},
-    {"q": "4. Oʻzbekiston Bolalar Tashkilotida nechta yo’nalish bor?", "o": ["A) 5 ta", "B) 7 ta", "C) 9 ta", "D) 11 ta"], "a": "C) 9 ta"},
-    {"q": "5. Tashkilotning to‘liq nomi qanday?", "o": ["A) Oʻzbekiston Yoshlar Jamiyati", "B) Oʻzbekiston Bolalar Tashkiloti", "C) Bolalar va Oila Markazi", "D) Respublika Forum"], "a": "B) Oʻzbekiston Bolalar Tashkiloti"},
-    {"q": "6. Tashkilot nomi ingliz tilida qanday nomlanadi?", "o": ["A) Non-governmental non-profit organization “Children's Organization of Uzbekistan”", "B) Governmental organization “Children’s Uzbekistan”", "C) Private charity", "D) International union"], "a": "A) Non-governmental non-profit organization “Children's Organization of Uzbekistan”"},
-    {"q": "7. Tashkilotning rahbar organi qayerda joylashgan?", "o": ["A) Toshkent sh., Navoiy ko‘chasi, 11A uy", "B) Mustaqillik maydoni", "C) Eski shahar", "D) Toshkent viloyati"], "a": "A) Toshkent sh., Navoiy ko‘chasi, 11A uy"},
-    {"q": "8. Loyiha nima?", "o": ["A) Maʼlum bir maqsadga erishish uchun tartiblangan faoliyatlar majmui", "B) Faqat hujjat yozish", "C) Ichki yig'ilish"], "a": "A) Maʼlum bir maqsadga erishish uchun tartiblangan faoliyatlar majmui"},
-    {"q": "9. Yashil makon sardorining vazifasi?", "o": ["A) Sport tadbirlari", "B) Ekologik madaniyatni targ‘ib qilish", "C) Moliyaviy hisoblar", "D) San'at tanlovlari"], "a": "B) Ekologik madaniyatni targ‘ib qilish"},
-    {"q": "10. Nazorat-taftish komissiyasi qanday organ?", "o": ["A) Tadbir guruhi", "B) Moliyaviy‑xo‘jalik nazorati", "C) Marketing bo'limi", "D) Kengash"], "a": "B) Moliyaviy‑xo‘jalik nazorati"},
-    {"q": "11. Tashkilotning asosiy maqsadi?", "o": ["A) Daromad olish", "B) Bolalar huquqlarini himoya qilish", "C) Faqat sport", "D) Tashqi siyosat"], "a": "B) Bolalar huquqlarini himoya qilish"},
-    {"q": "12. Tashkilot aʼzolari nimani amalga oshiradilar?", "o": ["A) Faqat loyihalar", "B) Loyihalar, aksiyalar, treninglarda ishtirok etadilar", "C) Kitob nashr qilish"], "a": "B) Loyihalar, aksiyalar, treninglarda ishtirok etadilar"},
-    {"q": "13. Tashkilot qaysi shaklda tashkil etilgan?", "o": ["A) Davlat organi", "B) Nodavlat, notijorat tashkilot", "C) Xususiy korxona", "D) Xalqaro"], "a": "B) Nodavlat, notijorat tashkilot"},
-    {"q": "14. Plogging aksiya maqsadi nima?", "o": ["A) Pul yig‘ish", "B) Atrof-muhitni tozalash va sog'lom turmush", "C) Reyting", "D) Sport"], "a": "B) Atrof-muhitni tozalash va sog'lom turmush"},
-    {"q": "15. Butunjahon bolalar kuni qachon?", "o": ["A) 20-noyabr", "B) 1-iyun", "C) 11-oktabr", "D) 1-sentabr"], "a": "A) 20-noyabr"},
+    {"q": "1. \"Bolalar harakati\" sardorlar saylovi har o‘quv yilida necha bosqichda o‘tkaziladi?", "o": ["A) 5", "B) 4", "C) 3", "D) 2"], "a": "B) 4"},
+    {"q": "2. \"Ustoz AI\" yo‘nalishi sardorining vazifasi nima?", "o": ["A) Bolalarni kasb-hunarga, qolaversa, zamonaviy kasblarni o‘rganishga bo‘lgan qiziqishlarini qo‘llab-quvvatlash", "B) Bolalarning tillarga bo‘lgan qiziqishlarini oshirish", "C) Bolalar o‘rtasida kitobxonlik madaniyatini oshirish", "D) Bolalarning iqtidorini qo‘llab-quvvatlash"], "a": "A) Bolalarni kasb-hunarga, qolaversa, zamonaviy kasblarni o‘rganishga bo‘lgan qiziqishlarini qo‘llab-quvvatlash"},
+    {"q": "3. O‘zbekiston bolalar tashkiloti Boshqaruv Kengashi raisi kim?", "o": ["A) Husnora Axadova", "B) Ruxsora Shokirova", "C) Hasanboy Nabiyev", "D) Alisher Sa’dullayev"], "a": "C) Hasanboy Nabiyev"},
+    {"q": "4. \"Jasorat\" yo‘nalishi sardorining asosiy vazifasi nimadan iborat?", "o": ["A) Bolalarni Vatanga muhabbat, milliy va umuminsoniy qadriyatlarga hurmat ruhida tarbiyalashga ko‘maklashish", "B) Bolalarning media savodxonligini oshirish va media yo‘nalishiga qiziqishi bor bolalarni qo‘llab-quvvatlash", "C) Yosh ijodkor bolalarni qo‘llab-quvvatlash va mushoira klublarini tashkil etish", "D) Xayriya tadbirlarini va aksiyalarni tashkil etish"], "a": "A) Bolalarni Vatanga muhabbat, milliy va umuminsoniy qadriyatlarga hurmat ruhida tarbiyalashga ko‘maklashish"},
+    {"q": "5. O‘zbekistonda Bola huquqlari bo‘yicha vakil (Bolalar ombudsmani) kim?", "o": ["A) Aliya Yunusova", "B) Surayyo Rahmonova", "C) Hasanboy Nabiyev", "D) Dilshodbek Rahimov"], "a": "B) Surayyo Rahmonova"},
+    {"q": "6. Risolat buvining Rustam ismli nevarasi, Momiq laqabli mushugi va Qoplon laqabli iti bor. Buvining nechta nevarasi bor?", "o": ["A) 3", "B) 2", "C) 4", "D) 1"], "a": "D) 1"},
+    {"q": "7. Karim maktabga boradigan yo‘lga 10 daqiqa sarflaydi. Agar u do‘sti bilan boradigan bo‘lsa, qancha vaqt sarflaydi?", "o": ["A) 7 daqiqa", "B) 15 daqiqa", "C) 10 daqiqa", "D) To‘g‘ri javob yo‘q"], "a": "C) 10 daqiqa"},
+    {"q": "8. Bog‘da 8 ta o‘rindiq bor edi. Uchtasi bo‘yaldi. Bog‘da nechta o‘rindiq bo‘ldi?", "o": ["A) 8", "B) 7", "C) 9", "D) 5"], "a": "A) 8"},
+    {"q": "9. “Buvamning oshqozonidagi mamlakat” bolalar kitobining muallifi kim?", "o": ["A) Qobiljon Shermatov", "B) G‘afur G‘ulom", "C) Anvar Obidjon", "D) Sa’dulla Quronov"], "a": "A) Qobiljon Shermatov"},
+    {"q": "10. Bolalarga fizika va astronomiya fanlariga qiziqishga yordam beradigan “Koinot javohiri” kitobini kim yozgan?", "o": ["A) Oybek", "B) Sa’dulla Quronov", "C) Abdulla Oripov", "D) Mirzo Ulug‘bek"], "a": "B) Sa’dulla Quronov"},
+    {"q": "11. She’riy shaklda yozilgan, mehr, tabiat va ota-onaga hurmat haqida ta’sirli asar \"Bola va Quyosh\" muallifi kim?", "o": ["A) Alisher Navoiy", "B) Erkin Vohidov", "C) G‘afur G‘ulom", "D) Xudoyberdi To‘xtaboyev"], "a": "B) Erkin Vohidov"},
+    {"q": "12. Termometr 15 darajani ko‘rsatmoqda. Ikkita shunday termometr necha darajani ko‘rsatadi?", "o": ["A) 15 darajani", "B) 30 darajani", "C) 45 darajani", "D) 60 darajani"], "a": "A) 15 darajani"},
+    {"q": "13. Nimani tayyorlash mumkin, lekin yeb bo‘lmaydi?", "o": ["A) Muzqaymoq", "B) Tez tayyorlanadigan ovqatlar", "C) Darslar (uy vazifasi)", "D) Mevalar"], "a": "C) Darslar (uy vazifasi)"},
+    {"q": "14. Nima doim ko‘payib boraveradi, lekin hech qachon kamaymaydi?", "o": ["A) Tabassum", "B) Insonning yoshi", "C) Vaqt", "D) Soniya"], "a": "B) Insonning yoshi"},
+    {"q": "15. O‘zbekiston Bolalar Tashkilotida nechta yo‘nalish bor?", "o": ["A) 7", "B) 9", "C) 6", "D) 10"], "a": "B) 9"},
 ] # --- FSM HOLATLARI ---
 class Form(StatesGroup):
     name = State()
     surname = State()
     age = State()
+    phone = State()  # Yangi holat
     check_sub = State()
     quiz = State()
+
+def get_phone_kb():
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="📱 Raqamni yuborish", request_contact=True)]],
+        resize_keyboard=True,
+        one_time_keyboard=True
+    )
 
 bot = Bot(token=API_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
 dp = Dispatcher(storage=MemoryStorage())
@@ -93,12 +102,10 @@ async def process_age(message: types.Message, state: FSMContext):
         await state.clear()
     else:
         await state.update_data(age=age)
-        text = "Tanlovda ishtirok etish uchun quyidagi kanallarga obuna bo'ling:\n"
-        for ch in CHANNELS: 
-            text += f"{ch}\n"
-        await message.answer(text, reply_markup=check_kb)
-        await state.set_state(Form.check_sub) 
-@dp.message(Form.check_sub, F.text=="✅ Obunani tekshirish")
+        await message.answer("Raxmat! Endi pastdagi tugmani bosib telefon raqamingizni yuboring:", 
+                             reply_markup=get_phone_kb())
+        await state.set_state(Form.phone)
+
 async def check_subscription(message: types.Message, state: FSMContext):
     not_subscribed = []
     for ch in CHANNELS:
