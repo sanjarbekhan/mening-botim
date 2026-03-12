@@ -207,7 +207,22 @@ async def finish_quiz_logic(message: types.Message, state: FSMContext):
     
     await message.answer(f"Tabriklaymiz! Test tugadi.\nSiz {len(QUIZ_DATA)} tadan {score} ta to'g'ri javob berdingiz.", reply_markup=ReplyKeyboardRemove())
     
-report = (f"🔔 YANGI NATIJA:\n👤 {data['name']} {data['surname']}\n"
+async def finish_quiz_logic(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    finished_users.add(message.from_user.id)
+    
+    # Ism va familiyani bazaga qo'shish (takrorlanishni oldini olish uchun)
+    name = data.get("name", "").strip().lower()
+    surname = data.get("surname", "").strip().lower()
+    finished_names.add(f"{name}|{surname}")
+
+    score = data.get('score', 0)
+    start_time = data.get('start_time')
+    time_taken = datetime.now().timestamp() - start_time
+    
+    await message.answer(f"Tabriklaymiz! Test tugadi.\nSiz {len(QUIZ_DATA)} tadan {score} ta to'g'ri javob berdingiz.", reply_markup=ReplyKeyboardRemove())
+    
+    report = (f"🔔 YANGI NATIJA:\n👤 {data['name']} {data['surname']}\n"
               f"📍 Viloyat: {data.get('region', 'Nomalum')}\n"
               f"📞 {data['phone']}\n📅 Yosh: {data['age']}\n"
               f"📊 Ball: {score}/15\n⏱ Vaqt: {time_taken:.1f}s")
