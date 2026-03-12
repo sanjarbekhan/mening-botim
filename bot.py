@@ -14,16 +14,23 @@ from aiogram.client.default import DefaultBotProperties
 # SOZLAMALAR
 # ==========================================
 API_TOKEN = "8409047534:AAH0h-FogMveHfKuqwkNLyW_4JXk8jp3c54"
-CHANNELS = ["https://youtube.com/@uzyoshlaryetakchilari?si=HJKCZouTW1QHsZ9s
-
-            
-            ", "https://www.facebook.com/share/17N6BkJiHy/?mibextid=wwXIfr
-            
-            
-            ", "https://www.instagram.com/uzyoshlaryetakchilari?igsh=MWd0ZTgyanRkc2E5aQ==
-            
-            
-            ", "@uzyoshlaryetakchilarii"]
+@dp.message(Form.phone, F.contact)
+async def process_phone(message: types.Message, state: FSMContext):
+    await state.update_data(phone=message.contact.phone_number)
+    check_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="✅ Obunani tekshirish")]], resize_keyboard=True)
+    
+    # Barcha ijtimoiy tarmoqlar havolalari
+    text = (
+        "<b>Ishtirok etish uchun quyidagi sahifalarimizga obuna bo'ling:</b>\n\n"
+        "1. Telegram: https://t.me/bolalartashkilotiuz\n"
+        "2. Instagram: [Sizning Instagram havolangiz]\n"
+        "3. Facebook: [Sizning Facebook havolangiz]\n"
+        "4. YouTube: https://youtube.com/@uzyoshlaryetakchilari\n\n"
+        "<i>Eslatma: Bot faqat Telegram kanallariga obunani tekshira oladi, qolganlariga vijdonan obuna bo'lishingizni so'raymiz!</i>"
+    )
+    
+    await message.answer(text, reply_markup=check_kb, disable_web_page_preview=True)
+    await state.set_state(Form.check_sub)
 ADMIN_ID = 6755433894
 
 # ==========================================
