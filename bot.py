@@ -21,6 +21,13 @@ ADMIN_ID = 6755433894
 # Faqat bot tekshira oladigan Telegram kanallari
 CHANNELS = ["@uzyoshlaryetakchilarii"] 
 
+# VILOYATLAR RO'YXATI (Shu yerga qo'shing)
+REGIONS = [
+    "Toshkent sh.", "Toshkent vil.", "Andijon", "Farg'ona", "Namangan",
+    "Buxoro", "Navoiy", "Jizzax", "Sirdaryo", "Samarqand",
+    "Qashqadaryo", "Surxondaryo", "Xorazm", "Qoraqalpog'iston Resp."
+]
+
 # ==========================================
 # TEST SAVOLLARI
 # ==========================================
@@ -46,6 +53,7 @@ class Form(StatesGroup):
     name = State()
     surname = State()
     age = State()
+    region = State()  # Yangi qo'shildi
     phone = State()
     check_sub = State()
     quiz = State()
@@ -90,16 +98,32 @@ async def process_age(message: types.Message, state: FSMContext):
         return
     
     age = int(message.text)
-    
-    # 18 yoshdan kattalarni to'xtatish
     if age > 18:
-        await message.answer("<b>Uzr!</b> Tanlovda faqat 18 yosh va undan kichik yoshdagilar ishtirok etishi mumkin.", parse_mode="HTML")
-        await state.clear() # Jarayonni bekor qilish
+        await message.answer("<b>Uzr!</b> Tanlovda faqat 18 yosh va undan kichiklar qatnashishi mumkin.", parse_mode="HTML")
+        await state.clear()
         return
 
     await state.update_data(age=age)
+    
+    # Viloyatlar tugmalarini chiqarish
+    kb_list = [REGIONS[i:i + 2] for i in range(0, len(REGIONS), 2)]
+    region_kb = ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=col) for col in row] for row in kb_list],
+        resize_keyboard=True
+    )
+    
+    await message.answer("Yashash viloyatingizni tanlang:", reply_markup=region_kb)
+    await state.set_state(Form.region)
+
+@dp.message(Form.region)
+async def process_region(message: types.Message, state: FSMContext):
+    if message.text not in REGIONS:
+        await message.answer("Iltimos, pastdagi tugmalardan birini tanlang!")
+        return
+        
+    await state.update_data(region=message.text)
     phone_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="📱 Raqamni yuborish", request_contact=True)]], resize_keyboard=True)
-    await message.answer("Telefon raqamingizni yuboring (Tugmani bosing):", reply_markup=phone_kb)
+    await message.answer("Raxmat! Endi telefon raqamingizni yuboring:", reply_markup=phone_kb)
     await state.set_state(Form.phone)
 @dp.message(Form.phone, F.contact)
 async def process_phone(message: types.Message, state: FSMContext):
@@ -183,8 +207,10 @@ async def finish_quiz_logic(message: types.Message, state: FSMContext):
     
     await message.answer(f"Tabriklaymiz! Test tugadi.\nSiz {len(QUIZ_DATA)} tadan {score} ta to'g'ri javob berdingiz.", reply_markup=ReplyKeyboardRemove())
     
-    report = (f"🔔 YANGI NATIJA:\n👤 {data['name']} {data['surname']}\n📞 {data['phone']}\n"
-              f"📅 Yosh: {data['age']}\n📊 Ball: {score}/15\n⏱ Vaqt: {time_taken:.1f}s")
+   report = (f"🔔 YANGI NATIJA:\n👤 {data['name']} {data['surname']}\n"
+              f"📍 Viloyat: {data.get('region', 'Nomalum')}\n"
+              f"📞 {data['phone']}\n📅 Yosh: {data['age']}\n"
+              f"📊 Ball: {score}/15\n⏱ Vaqt: {time_taken:.1f}s")
     
     try:
         await bot.send_message(ADMIN_ID, report)
