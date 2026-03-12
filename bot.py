@@ -14,7 +14,16 @@ from aiogram.client.default import DefaultBotProperties
 # SOZLAMALAR
 # ==========================================
 API_TOKEN = "8409047534:AAH0h-FogMveHfKuqwkNLyW_4JXk8jp3c54"
-CHANNELS = ["https://youtube.com/@uzyoshlaryetakchilari?si=HJKCZouTW1QHsZ9s", "https://www.facebook.com/share/17N6BkJiHy/?mibextid=wwXIfr", "https://www.instagram.com/uzyoshlaryetakchilari?igsh=MWd0ZTgyanRkc2E5aQ==", "@uzyoshlaryetakchilarii"]
+CHANNELS = ["https://youtube.com/@uzyoshlaryetakchilari?si=HJKCZouTW1QHsZ9s
+
+            
+            ", "https://www.facebook.com/share/17N6BkJiHy/?mibextid=wwXIfr
+            
+            
+            ", "https://www.instagram.com/uzyoshlaryetakchilari?igsh=MWd0ZTgyanRkc2E5aQ==
+            
+            
+            ", "@uzyoshlaryetakchilarii"]
 ADMIN_ID = 6755433894
 
 # ==========================================
