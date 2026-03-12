@@ -100,10 +100,10 @@ async def process_phone(message: types.Message, state: FSMContext):
     
     text = (
         "<b>Ishtirok etish uchun quyidagi sahifalarimizga obuna bo'ling:</b>\n\n"
-        "1. YouTube: https://www.youtube.com/@bolalartashkiloti\n"
-        "2. Facebook: https://www.facebook.com/kamalakbt.uz\n"
-        "3. Instagram: https://www.instagram.com/bolalartashkiloti\n"
-        "4. Telegram: https://t.me/bolalartashkilotiuz\n\n"
+        "1. YouTube: https://https://www.youtube.com/@Uzyoshlaryetakchilari\n"
+        "2. Facebook: https://www.facebook.com/profile.php?id=100083056130781\n"
+        "3. Instagram: https://www.instagram.com/uzyoshlaryetakchilari\n"
+        "4. Telegram: https://https://t.me/uzyoshlaryetakchilarii\n\n"
         "<i>Eslatma: Iltimos, barcha kanallarga obuna bo'ling va pastdagi tugmani bosing!</i>"
     )
     await message.answer(text, reply_markup=check_kb, disable_web_page_preview=True)
