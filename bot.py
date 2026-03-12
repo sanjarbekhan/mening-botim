@@ -1,3 +1,5 @@
+import os
+from aiohttp import web
 import asyncio
 import logging
 from datetime import datetime
@@ -183,9 +185,30 @@ async def finish_quiz_logic(message: types.Message, state: FSMContext):
         
     await state.clear()
 
+# Render so'rovlariga javob beradigan oddiy funksiya
+async def handle_ping(request):
+    return web.Response(text="Bot muvaffaqiyatli ishlamoqda!")
+
 async def main():
     logging.basicConfig(level=logging.INFO)
-    await dp.start_polling(bot)
+    
+    # 1. Botingizni orqa fonda ishga tushiramiz
+    asyncio.create_task(dp.start_polling(bot))
+
+    # 2. Render kutayotgan veb-serverni ishga tushiramiz
+    app = web.Application()
+    app.router.add_get('/', handle_ping)
+    
+    port = int(os.environ.get("PORT", 10000)) 
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, '0.0.0.0', port)
+    await site.start()
+    
+    print(f"Server {port}-portda ishga tushdi va bot polling qilmoqda...")
+
+    # Dastur yopilib qolmasligi uchun cheksiz kutish
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
     asyncio.run(main())
