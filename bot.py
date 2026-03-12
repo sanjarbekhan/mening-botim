@@ -86,13 +86,21 @@ async def process_surname(message: types.Message, state: FSMContext):
 @dp.message(Form.age)
 async def process_age(message: types.Message, state: FSMContext):
     if not message.text.isdigit():
-        await message.answer("Iltimos, yoshingizni son bilan kiriting:")
+        await message.answer("Iltimos, yoshingizni faqat son bilan kiriting:")
         return
-    await state.update_data(age=message.text)
+    
+    age = int(message.text)
+    
+    # 18 yoshdan kattalarni to'xtatish
+    if age > 18:
+        await message.answer("<b>Uzr!</b> Tanlovda faqat 18 yosh va undan kichik yoshdagilar ishtirok etishi mumkin.", parse_mode="HTML")
+        await state.clear() # Jarayonni bekor qilish
+        return
+
+    await state.update_data(age=age)
     phone_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="📱 Raqamni yuborish", request_contact=True)]], resize_keyboard=True)
     await message.answer("Telefon raqamingizni yuboring (Tugmani bosing):", reply_markup=phone_kb)
     await state.set_state(Form.phone)
-
 @dp.message(Form.phone, F.contact)
 async def process_phone(message: types.Message, state: FSMContext):
     await state.update_data(phone=message.contact.phone_number)
