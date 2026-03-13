@@ -19,8 +19,8 @@ API_TOKEN = "8409047534:AAGWUpQOIEKeUXED9eRYZGOA454ZYlkXJZg"
 ADMIN_ID = 6755433894
 
 # Faqat bot tekshira oladigan Telegram kanallari
-CHANNELS = ["@uzyoshlaryetakchilarii"] 
-
+CHANNELS = ["@xasanboy_nabiyev"] 
+CHANNELS = ["@bolalartashkilotiuz"] 
 # VILOYATLAR RO'YXATI (Shu yerga qo'shing)
 REGIONS = [
     "Toshkent sh.", "Toshkent vil.", "Andijon", "Farg'ona", "Namangan",
@@ -132,10 +132,9 @@ async def process_phone(message: types.Message, state: FSMContext):
     
     text = (
         "<b>Ishtirok etish uchun quyidagi sahifalarimizga obuna bo'ling:</b>\n\n"
-        "1. YouTube: https://https://www.youtube.com/@Uzyoshlaryetakchilari\n"
-        "2. Facebook: https://www.facebook.com/profile.php?id=100083056130781\n"
-        "3. Instagram: https://www.instagram.com/uzyoshlaryetakchilari\n"
-        "4. Telegram: https://https://t.me/uzyoshlaryetakchilarii\n\n"
+        "1. Instagram: https://www.instagram.com/bolalartashkiloti/\n"
+        "2. Telegram: https://t.me/bolalartashkilotiuz\n"
+        "3. Telegram: https://t.me/xasanboy_nabiyev\n\n"
         "<i>Eslatma: Iltimos, barcha kanallarga obuna bo'ling va pastdagi tugmani bosing!</i>"
     )
     await message.answer(text, reply_markup=check_kb, disable_web_page_preview=True)
@@ -158,7 +157,7 @@ async def check_sub_logic(message: types.Message, state: FSMContext):
         go_quiz_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="🚀 Testni boshlash")]], resize_keyboard=True)
         await message.answer("Raxmat! Obuna tasdiqlandi. Testni boshlashingiz mumkin.", reply_markup=go_quiz_kb)
     else:
-        text = "Siz hali Telegram kanalimizga obuna bo'lmadingiz:\n" + "\n".join(not_subbed)
+        text = "Siz hali Telegram kanallarimizga obuna bo'lmadingiz:\n" + "\n".join(not_subbed)
         await message.answer(text)
 
 @dp.message(F.text == "🚀 Testni boshlash")
