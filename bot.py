@@ -267,11 +267,12 @@ async def finish_quiz_logic(chat_id: int, user_id: int, state: FSMContext):
     await bot.send_message(chat_id, user_msg, reply_markup=ReplyKeyboardRemove())
     
     # Adminga boradigan xabar
+# Adminga boradigan xabar (Xatolik tuzatilgan variant)
     admin_msg = (
         f"🔔 <b>YANGI NATIJA KELDI:</b>\n\n"
         f"👤 <b>F.I.SH:</b> {name} {surname}\n"
-        f"📅 <b>Yoshi:</b> {data.get('age', 'Noma\\'lum')}\n"
-        f"📍 <b>Viloyat:</b> {data.get('region', 'Noma\\'lum')}\n"
+        f"📅 <b>Yoshi:</b> {data.get('age', 'Nomaʼlum')}\n"
+        f"📍 <b>Viloyat:</b> {data.get('region', 'Nomaʼlum')}\n"
         f"📞 <b>Raqam:</b> {data.get('phone', 'Kiritilmagan')}\n"
         f"📊 <b>Ball:</b> {score} / 15\n"
         f"⏱ <b>Umumiy sarflangan vaqt:</b> {time_str}"
