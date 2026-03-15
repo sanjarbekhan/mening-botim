@@ -15,7 +15,7 @@ from aiogram.client.default import DefaultBotProperties
 # ==========================================
 # SOZLAMALAR
 # ==========================================
-API_TOKEN = "8409047534:AAGWUpQOIEKeUXED9eRYZGOA454ZYlkXJZg"
+API_TOKEN = "8409047534:AAEFC-frcO8M96psrvTbmweQaPdpZ25L_Xw"
 ADMIN_ID = 6755433894
 
 # Kanallar bitta ro'yxatga olindi
