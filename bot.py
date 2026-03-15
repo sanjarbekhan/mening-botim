@@ -15,11 +15,11 @@ from aiogram.client.default import DefaultBotProperties
 # ==========================================
 # SOZLAMALAR
 # ==========================================
-API_TOKEN = "8409047534:AAEFC-frcO8M96psrvTbmweQaPdpZ25L_Xw"
+API_TOKEN = "8409047534:AAGa8c_sAdBWIhZclc23ZVvQweDQW1xqmi8"
 ADMIN_ID = 6755433894
 
-# Kanallar bitta ro'yxatga olindi
-CHANNELS = ["@xasanboy_nabiyev", "@bolalartashkilotiuz"] 
+# Faqat bitta kanal qoldirildi
+CHANNELS = ["@bolalartashkilotiuz"] 
 
 REGIONS = [
     "Toshkent sh.", "Toshkent vil.", "Andijon", "Farg'ona", "Namangan",
@@ -117,7 +117,8 @@ async def process_phone(message: types.Message, state: FSMContext):
     num = message.contact.phone_number if message.contact else message.text
     await state.update_data(phone=num)
     check_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="✅ Obunani tekshirish")]], resize_keyboard=True)
-    text = "<b>Obuna bo'ling:</b>\n\n1. Instagram: https://www.instagram.com/bolalartashkiloti/\n2. Telegram: https://t.me/bolalartashkilotiuz\n3. Telegram: https://t.me/xasanboy_nabiyev"
+    # Xabardan xasanboy_nabiyev linki olib tashlandi
+    text = "<b>Obuna bo'ling:</b>\n\n1. Instagram: https://www.instagram.com/bolalartashkiloti/\n2. Telegram: https://t.me/bolalartashkilotiuz"
     await message.answer(text, reply_markup=check_kb, disable_web_page_preview=True)
     await state.set_state(Form.check_sub)
 
@@ -137,7 +138,7 @@ async def check_sub_logic(message: types.Message, state: FSMContext):
         go_quiz_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="🚀 Testni boshlash")]], resize_keyboard=True)
         await message.answer("Rahmat! Obuna tasdiqlandi.", reply_markup=go_quiz_kb)
     else:
-        await message.answer(f"Quyidagi kanallarga obuna bo'lmagansiz:\n" + "\n".join(not_subbed))
+        await message.answer(f"Siz hali @bolalartashkilotiuz kanaliga obuna bo'lmadingiz. Iltimos, obuna bo'ling va qayta urinib ko'ring.")
 
 @dp.message(F.text == "🚀 Testni boshlash")
 async def start_quiz_logic(message: types.Message, state: FSMContext):
@@ -195,7 +196,6 @@ async def finish_quiz_logic(chat_id: int, user_id: int, state: FSMContext):
     
     await bot.send_message(chat_id, f"Test tugadi!\nBall: {score}/15\nVaqt: {time_str}", reply_markup=ReplyKeyboardRemove())
     
-    # Render xatoligini oldini olish uchun Noma'lum so'zi tuzatildi
     admin_report = (
         f"🔔 NATIJA:\n"
         f"👤 {data.get('name')} {data.get('surname')}\n"
